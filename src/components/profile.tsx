@@ -1,19 +1,22 @@
 'use client'
 
-import { useAccount, useConnect, useDisconnect, useChains, useChainId, useSwitchChain } from 'wagmi'
-import { metaMask } from 'wagmi/connectors'
+import { ConnectButton } from '@rainbow-me/rainbowkit'
+import { useAccount, 
+  // useConnect, 
+  useDisconnect, useChains, useChainId, useSwitchChain } from 'wagmi'
+// import { metaMask } from 'wagmi/connectors'
 
 export function Profile() {
   const { address, isConnected } = useAccount()
-  const { connect } = useConnect()
+  // const { connect } = useConnect()
   const { disconnect } = useDisconnect()
   const chains = useChains()
   const chainId = useChainId()
   const { switchChain } = useSwitchChain()
 
-  const handleConnect = async () => {
-    connect({ connector: metaMask() })
-  }
+  // const handleConnect = async () => {
+  //   connect({ connector: metaMask() })
+  // }
 
   if (isConnected) {
     return (
@@ -44,11 +47,14 @@ export function Profile() {
   }
 
   return (
-    <button 
-      className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-      onClick={handleConnect}
-    >
-      Connect Wallet
-    </button>
+    <div className="flex w-full justify-center items-center p-20">
+      <ConnectButton chainStatus={"icon"} accountStatus={"avatar"} showBalance={false} />
+    </div>
+    // <button 
+    //   className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+    //   onClick={handleConnect}
+    // >
+    //   Connect Wallet
+    // </button>
   )
 } 
