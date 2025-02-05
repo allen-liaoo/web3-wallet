@@ -21,8 +21,8 @@ const rainbowkitConfig = getDefaultConfig({
   chains: [mainnet, sepolia],
   ssr: false, // If your dApp uses server side rendering (SSR)
   transports: {
-    [mainnet.id]: http(`https://mainnet.infura.io/v3/${process.env.NEXT_MAINNET_API_KEY}`),
-    [sepolia.id]: http(`https://sepolia.infura.io/v3/${process.env.NEXT_SEPOLIA_API_KEY}`)
+    [mainnet.id]: http(`https://mainnet.infura.io/v3/${process.env.NEXT_METAMASK_API_KEY}`),
+    [sepolia.id]: http(`https://sepolia.infura.io/v3/${process.env.NEXT_METAMASK_API_KEY}`)
   }
 });
 
