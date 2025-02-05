@@ -1,5 +1,6 @@
-// day 11
+// day 11 - modified to read from .env, and ask for address to send to (I would send to yourself)
 // go run transac.go
+// Go to https://sepolia.etherscan.io/tx/[transaction_hash]
 package main
 
 import (
@@ -11,6 +12,8 @@ import (
 	"os"
 	"strings"
 	"time"
+
+	"github.com/joho/godotenv"
 
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts"
@@ -39,6 +42,11 @@ func DeriveWallet(mnemonic string, path accounts.DerivationPath) (*accounts.Acco
 }
 
 func main() {
+	err := godotenv.Load("../.env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	fmt.Println("Please enter your mnemonic:")
 	var mnemonic string
 	for i := 0; i < 12; i++ {
@@ -59,7 +67,7 @@ func main() {
 	amountToSend := big.NewInt(1000000000000000) // 0.001 eth in wei
 
 	// connect to json rpc node
-	client, err := ethclient.Dial("https://eth-sepolia.g.alchemy.com/v2/" + os.Getenv("ALCHEMY_API_KEY"))
+	client, err := ethclient.Dial("https://sepolia.infura.io/v3/" + os.Getenv("METAMASK_API_KEY"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -91,9 +99,13 @@ func main() {
 	fmt.Printf("Estimated gas: %d\n", estimateGas)
 
 	// create transaction
+	fmt.Println("Send transaction to address:")
+	var address string
+	fmt.Scanf("%s", &address)
+
 	tx := types.NewTransaction(
 		nonce,
-		common.HexToAddress("0xE2Dc3214f7096a94077E71A3E218243E289F1067"),
+		common.HexToAddress(address), // "0xE2Dc3214f7096a94077E71A3E218243E289F1067"
 		amountToSend,
 		estimateGas,
 		gasPrice,

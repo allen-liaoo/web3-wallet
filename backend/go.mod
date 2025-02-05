@@ -24,6 +24,7 @@ require (
 	github.com/go-resty/resty/v2 v2.16.5 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/holiman/uint256 v1.3.1 // indirect
+	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/miguelmota/go-ethereum-hdwallet v0.1.2 // indirect
 	github.com/mmcloughlin/addchain v0.4.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
