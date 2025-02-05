@@ -1,3 +1,4 @@
+// day 10
 // go run hd_wallet.go
 // Go to https://www.iancoleman.net/bip39/, choose ETH
 package main

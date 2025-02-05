@@ -1,3 +1,4 @@
+// day 10
 package main
 
 import (

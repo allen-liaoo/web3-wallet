@@ -1,3 +1,4 @@
+// day 10
 // go test -v .
 package main
 

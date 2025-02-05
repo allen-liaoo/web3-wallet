@@ -1,3 +1,4 @@
+// day 9
 // go test .
 package main
 
