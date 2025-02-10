@@ -37,13 +37,20 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+// https://etherscan.io/address/0x1f9840a85d5af5bf1d1762f925bdaddc4201f984
+const uniContractAddress = "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984";
+
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController mnemonicController = TextEditingController();
   String mnemonic = "";
   HDWallet? btcWallet, ethWallet, tronWallet;
   String? btcTx, ethTx, ethTxHash;
+  // day 13
+  String? ethAddress;
+  double? uniBalance; // end
 
   void refreshMnemonic() {
+    print('Got mnemonic: ${mnemonicController.text}');
     final newMnemonic = mnemonicController.text;
     if (bip39.validateMnemonic(newMnemonic)) {
       final seed = bip39.mnemonicToSeed(newMnemonic);
@@ -51,17 +58,29 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         mnemonic = newMnemonic;
         btcWallet = hdWallet.derivePath("m/44'/0'/0'/0/0");
-        ethWallet = hdWallet.derivePath("m/44'/60'/0'/0/0");
+        ethWallet = hdWallet.derivePath("m/44'/60'/0'/0/0");  // eth mainnet derivation path works for sepolia as well
         tronWallet = hdWallet.derivePath("m/44'/195'/0'/0/0");
 
+        // day 12
         // disabled because this causes an error (Unsupported operation: Uint64 accessor not supported by dart2js.)
         // btcTx = sampleBitcoinTx(btcWallet!);
         
-        sampleEthereumTx(ethWallet!).then((tx) {
+        // day 12 (disabled for day 13)
+        // sampleEthereumTx(ethWallet!).then((tx) {
+        //   setState(() {
+        //     ethTx = tx;
+        //   });
+        // });
+
+        // day 13
+        final ethPriKey = EthPrivateKey.fromHex(ethWallet!.privKey!);
+        ethAddress = ethPriKey.address.hex;
+        readTokenBalance(uniContractAddress, ethAddress!).then((balance) {
           setState(() {
-            ethTx = tx;
+            uniBalance = balance;
           });
-        });
+        }); // end
+
       });
     } else {
       setState(() {
@@ -75,6 +94,22 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  // day 13
+  void sendToken() {
+    final ethPriKey = EthPrivateKey.fromHex(ethWallet!.privKey!);
+    sendTokenTransaction(
+      privateKey: ethPriKey,
+      contractAddress: uniContractAddress,
+      // send to yourself
+      toAddress: ethAddress!, //"0xE2Dc3214f7096a94077E71A3E218243E289F1067",
+      amount: BigInt.from(100),
+    ).then((txHash) {
+      setState(() {
+        ethTxHash = txHash;
+      });
+    });
+  } // end
+
   @override
   void initState() {
     super.initState();
@@ -85,10 +120,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final btcAddress = btcWallet?.address;
 
-    final ethPriKey = ethWallet?.privKey == null
-        ? null
-        : EthPrivateKey.fromHex(ethWallet!.privKey!);
-    final ethAddress = ethPriKey?.address.hex;
+    // final ethPriKey = ethWallet?.privKey == null
+    //     ? null
+    //     : EthPrivateKey.fromHex(ethWallet!.privKey!);
+    // final ethAddress = ethPriKey?.address.hex; 
 
     String? tronAddress;
     if (tronWallet != null) {
@@ -142,9 +177,20 @@ class _MyHomePageState extends State<MyHomePage> {
                         ethTxHash = txHash;
                       });
                     },
-                    child: const Text('Broadcast tx'),
+                    child: const Text('Day 12 Broadcast tx'),
                   ),
-                )
+                ),
+              // day 13
+              if (uniBalance != null) Text('UNI balance: $uniBalance'),
+              if (uniBalance != null)
+                SizedBox(
+                  width: 200,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: sendToken,
+                    child: const Text('Day 13 Send Token Tx'),
+                  ),
+                ) //end
             ],
           ],
         ),
