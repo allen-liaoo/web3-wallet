@@ -57,7 +57,7 @@ Future<String> sampleEthereumTx(HDWallet ethWallet) async {
       from: ethPriKey.address,
       // Send to yourself
       to: ethPriKey.address, //EthereumAddress.fromHex("0xE2Dc3214f7096a94077E71A3E218243E289F1067"),
-      value: EtherAmount.fromBase10String(EtherUnit.gwei, "10000"),
+      value: EtherAmount.fromBase10String(EtherUnit.gwei, "100"),
     ),
   );
 }

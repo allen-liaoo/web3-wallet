@@ -53,7 +53,10 @@ class _MyHomePageState extends State<MyHomePage> {
         btcWallet = hdWallet.derivePath("m/44'/0'/0'/0/0");
         ethWallet = hdWallet.derivePath("m/44'/60'/0'/0/0");
         tronWallet = hdWallet.derivePath("m/44'/195'/0'/0/0");
-        btcTx = sampleBitcoinTx(btcWallet!);
+
+        // disabled because this causes an error (Unsupported operation: Uint64 accessor not supported by dart2js.)
+        // btcTx = sampleBitcoinTx(btcWallet!);
+        
         sampleEthereumTx(ethWallet!).then((tx) {
           setState(() {
             ethTx = tx;
